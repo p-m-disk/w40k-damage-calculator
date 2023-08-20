@@ -3,16 +3,6 @@
 		<title>Damage estimation</title>
 	</head>
 	<body>
-		<!-- TODO
-			- damage from dice
-			- sustained hits
-			- devastating wounds
-			- hit modifier
-			- wound modifier
-			- save modifier?
-			- make prettier
-		-->
-
 		<h3>
 			Weapon profile
 		</h3>
@@ -25,43 +15,42 @@
 			<label for="attacks">Attacks: <span></span></label>
 			<!-- TODO: make this an expandable section -->
 			<!-- TODO: recalculate label  -->
-			<input id="attacks" type="number" url-param="a" default-value="1" min="0"/>
+			<input id="attacks" type="number" url-param="a" default-value="1" min="0" step="1"/>
 
 			<label for="attacks_d6">D6</label>
-			<input id="attacks_d6" type="number" url-param="ad6" default-value="0" min="0"/>
+			<input id="attacks_d6" type="number" url-param="ad6" default-value="0" min="0" step="1"/>
 
 			<label for="attacks_d3">D3</label>
-			<input id="attacks_d3" type="number" url-param="ad3" default-value="0" min="0"/>
+			<input id="attacks_d3" type="number" url-param="ad3" default-value="0" min="0" step="1"/>
 		</div>
 		<div>
 			<label for="skill">Skill (N+)</label>
 			<input id="skill" 
 				type="number" min="1" max="6"
-				url-param="ws" default-value="4" 
-				onchange="recalculate()"/>
+				url-param="ws" default-value="4"/>
 		</div>
 		
 		<div>
 			<label for="strength">Strength</label>
-			<input id="strength" type="number" min="1" url-param="s" default-value="1"/>
+			<input id="strength" type="number" min="1" url-param="s" default-value="1" step="1"/>
 		</div>
 		
 		<div>
 			<label for="ap">AP</label>
-			<input id="ap" type="number" min="0" url-param="ap" default-value="0"/>
+			<input id="ap" type="number" min="0" url-param="ap" default-value="0" step="1"/>
 		</div>
 
 		<div>
 			<label for="damage">Damage <span></span></label>
 			<!-- TODO: make this an expandable section -->
 			<!-- TODO: recalculate label  -->
-			<input id="damage" type="number" url-param="dam" default-value="1"/>
+			<input id="damage" type="number" url-param="dam" default-value="1" step="1"/>
 
 			<label for="damage_d6">D6</label>
-			<input id="damage_d6" type="number" url-param="dd6" default-value="0" min="0"/>
+			<input id="damage_d6" type="number" url-param="dd6" default-value="0" min="0" step="1"/>
 
 			<label for="damage_d3">D3</label>
-			<input id="damage_d3" type="number" url-param="dd3" default-value="0" min="0"/>
+			<input id="damage_d3" type="number" url-param="dd3" default-value="0" min="0" step="1"/>
 		</div>
 
 		<h4>
@@ -69,7 +58,25 @@
 		</h4>
 
 		<div>
-			<!-- TODO: expandable section -->
+			<label for="anti">Anti (N+)</label>
+			<input type="checkbox" id="has_anti" url-param="h_anti">
+			<input id="anti" type="number" url-param="anti" default-value="4" max="6" min="2" step="1"/>
+		</div>
+
+		<div>
+			<label for="dev_wounds">Devastating wounds</label>
+			<input type="checkbox" id="dev_wounds" url-param="de_w">
+		</div>
+
+		<div>
+			<label for="lethal_hits">Lethal hits</label>
+			<input type="checkbox" id="lethal_hits" url-param="l_h">
+		</div>
+
+		<div>
+			<label for="sustained_hits">Sustained hits</label>
+			<input type="checkbox" id="has_sustained_hits" url-param="h_sh">
+			<input id="sustained_hits" type="number" url-param="sh" default-value="1" min="1" step="1"/>
 		</div>
 
 		<h3>
@@ -81,15 +88,22 @@
 		</div>
 		<div>
 			<label for="toughness">Toughness</label>
-			<input id="toughness" type="number" url-param="t" default-value="3"/>
+			<input id="toughness" type="number" url-param="t" default-value="3" step="1"/>
 		</div>
 		<div>
 			<label for="save">Save (N+)</label>
-			<input id="save" type="number" url-param="sv" default-value="3"/>
+			<input id="save" type="number" url-param="sv" default-value="3" step="1"/>
 		</div>
 		<div>
 			<label for="invuln_save">Invulnerable save (N+)</label>
-			<input id="invuln_save" type="number" url-param="invuln_sv" default-value="7"/>
+			<input type="checkbox" id="has_invuln_save" url-param="h_invs">
+			<input id="invuln_save" type="number" url-param="invuln_sv" default-value="6" max="6" min="1" step="1"/>
+		</div>
+
+		<div>
+			<label for="feel_no_pain">Feel no pain</label>
+			<input type="checkbox" id="has_feel_no_pain" url-param="h_fnp">
+			<input id="feel_no_pain" type="number" url-param="fnp" default-value="6" max="6" min="1" step="1"/>
 		</div>
 
 		<!-- save reroll ? -->
@@ -98,7 +112,10 @@
 			Modifiers
 		</h3>
 
-		<!-- hit modifier? -->
+		<div>
+			<label for="hit_modifier">To hit</label>
+			<input id="hit_modifier" type="number" url-param="hit_m" default-value="0" min="-1" max="1" step="1"/>
+		</div>
 		<div>
 			<label for="hit_reroll">Hit reroll</label>
 			<select id="hit_reroll" url-param="h_reroll" default-value="">
@@ -108,6 +125,14 @@
 			</select>
 		</div>
 		<div>
+			<label for="hit_fish6">Fish for crits</label>
+			<input type="checkbox" id="hit_fish6" url-param="h_f6">
+		</div>
+		<div>
+			<label for="wound_modifier">To wound</label>
+			<input id="wound_modifier" type="number" url-param="wnd_m" default-value="0" min="-1" max="1" step="1"/>
+		</div>
+		<div>
 			<label for="wound_reroll">Wound reroll</label>
 			<select id="wound_reroll" url-param="w_reroll" default-value="">
 				<option value="">None</option>
@@ -115,8 +140,11 @@
 				<option value="all">All</option>
 			</select>
 		</div>
+		<div>
+			<label for="wnd_fish6">Fish for crits</label>
+			<input type="checkbox" id="wnd_fish6" url-param="w_f6">
+		</div>
 
-		<!-- save reroll ? -->
 		<h3>
 			Expected wounds: <span id="result"></span> 
 		</h3> 
