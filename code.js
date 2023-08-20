@@ -70,7 +70,7 @@ function recalculate() {
             wounds += criticalWounds;
         }
 
-        const modifiedSave = save + armourPiercing;
+        const modifiedSave = save - armourPiercing;
         const effectiveSave = modifiedSave < invulnSave ? modifiedSave : invulnSave;
         const passSaveProbability = 1 - getSimpleD6(effectiveSave);
 
@@ -185,8 +185,8 @@ function getBaseProbability(toPass, modifier = 0, critical = 6) {
     const modifiedToPass = toPass - modifier;
     
     const critProbability = 1 / 6 + (6 - critical) / 6; // natural crit + additional crit chance from i.g. ANTI +N
-    const passProbability = getSimpleD6(modifiedToPass);
-    const failProbability = 1 - passProbability;
+    const passProbability = Math.max(0, getSimpleD6(modifiedToPass) - critProbability);
+    const failProbability = 1 - passProbability - critProbability;
 
     return {
         one: 1 / 6, // natural fail
